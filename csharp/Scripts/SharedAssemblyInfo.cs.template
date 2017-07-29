@@ -1,0 +1,14 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Do not change these attribute values to modify the information
+// associated with an assembly, this file is generated at build time.
+[assembly: AssemblyCopyright("Copyright © Dominik Psenner 2012")]
+[assembly: AssemblyProduct("Fury of Alucard")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("$LATESTTAG$.$LATESTTAGDISTANCE$")]
+[assembly: AssemblyFileVersion("$LATESTTAG$.$LATESTTAGDISTANCE$")]
+[assembly: AssemblyInformationalVersionAttribute("$LATESTTAG$+$LATESTTAGDISTANCE$-$ID$$MODIFIED$")]

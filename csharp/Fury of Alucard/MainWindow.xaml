@@ -1,0 +1,162 @@
+﻿<Window x:Class="Fury_of_Alucard.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Fury_of_Alucard.UserInterface.Converters"
+        Title="Fury of Alucard" Width="940" Height="533"
+        DataContext="{Binding Path=Manager, RelativeSource={RelativeSource Self}}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None" Background="Black"
+        KeyUp="Window_KeyUp">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Label Foreground="White">Menu Left</Label>
+        </Grid>
+        <Grid Grid.Column="1" Name="MapGrid" MouseDown="MapGrid_MouseDown">
+            <Image Source="Resources\Map.jpg" Stretch="Uniform" />
+            <ItemsControl ItemsSource="{Binding Path=Game.Map.Locations}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+						<Grid>
+							<Grid>
+								<Grid.RenderTransform>
+									<TransformGroup>
+										<TranslateTransform>
+											<TranslateTransform.X>
+												<MultiBinding Converter="{converters:MultiplyConverter}">
+													<Binding Path="X" />
+													<Binding Path="ActualWidth" ElementName="MapGrid" />
+												</MultiBinding>
+											</TranslateTransform.X>
+											<TranslateTransform.Y>
+												<MultiBinding Converter="{converters:MultiplyConverter}">
+													<Binding Path="Y" />
+													<Binding Path="ActualHeight" ElementName="MapGrid" />
+												</MultiBinding>
+											</TranslateTransform.Y>
+										</TranslateTransform>
+										<TranslateTransform X="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=ActualWidth, Converter={converters:MultiplyConverter}, ConverterParameter=-0.5}" Y="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=ActualHeight, Converter={converters:MultiplyConverter}, ConverterParameter=-0.5}" />
+									</TransformGroup>
+								</Grid.RenderTransform>
+								<Canvas VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.01">
+									<Canvas.Style>
+										<Style TargetType="Canvas">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Path=IsHighlighted}" Value="True">
+													<DataTrigger.EnterActions>
+														<BeginStoryboard>
+															<Storyboard>
+																<DoubleAnimation To="0.8" Duration="0:0:0.5" Storyboard.TargetProperty="Opacity" />
+															</Storyboard>
+														</BeginStoryboard>
+													</DataTrigger.EnterActions>
+													<DataTrigger.ExitActions>
+														<BeginStoryboard>
+															<Storyboard>
+																<DoubleAnimation To="0.01" Duration="0:0:0.5" Storyboard.TargetProperty="Opacity" />
+															</Storyboard>
+														</BeginStoryboard>
+													</DataTrigger.ExitActions>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Canvas.Style>
+									<Polygon StrokeThickness="1" MouseDown="Location_MouseDown" ToolTip="{Binding Path=Name}" MouseEnter="Polygon_MouseEnter" MouseLeave="Polygon_MouseLeave">
+										<Polygon.Style>
+											<Style TargetType="Polygon">
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Path=IsSelectable}" Value="True">
+														<Setter Property="Stroke" Value="Green" />
+													</DataTrigger>
+													<DataTrigger Binding="{Binding Path=IsSelectable}" Value="False">
+														<Setter Property="Stroke" Value="Black" />
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</Polygon.Style>
+										<Polygon.Fill>
+											<SolidColorBrush Color="#33FFFFFF" />
+										</Polygon.Fill>
+										<Polygon.Points>
+											<MultiBinding Converter="{converters:PointsToPointCollectionConverter}">
+												<Binding Path="Points" />
+												<Binding Path="ActualWidth" ElementName="MapGrid" />
+												<Binding Path="ActualHeight" ElementName="MapGrid" />
+												<Binding Path="X" />
+												<Binding Path="Y" />
+											</MultiBinding>
+										</Polygon.Points>
+									</Polygon>
+								</Canvas>
+							</Grid>
+						</Grid>
+					</DataTemplate>
+                </ItemsControl.ItemTemplate>
+			</ItemsControl>
+			<ItemsControl ItemsSource="{Binding Path=Game.Characters}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<Canvas />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border BorderThickness="1" Background="#33FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Center" MouseDown="Character_MouseDown">
+							<Border.Style>
+								<Style TargetType="Border">
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Path=IsHighlighted}" Value="True">
+											<Setter Property="BorderBrush" Value="Green" />
+										</DataTrigger>
+										<DataTrigger Binding="{Binding Path=IsHighlighted}" Value="False">
+											<Setter Property="BorderBrush" Value="Red" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Border.Style>
+							<Border.RenderTransform>
+								<TransformGroup>
+									<TranslateTransform>
+										<TranslateTransform.X>
+											<MultiBinding Converter="{converters:MultiplyConverter}">
+												<Binding Path="PositionOffsetX" />
+												<Binding Path="ActualWidth" ElementName="MapGrid" />
+											</MultiBinding>
+										</TranslateTransform.X>
+										<TranslateTransform.Y>
+											<MultiBinding Converter="{converters:MultiplyConverter}">
+												<Binding Path="PositionOffsetY" />
+												<Binding Path="ActualHeight" ElementName="MapGrid" />
+											</MultiBinding>
+										</TranslateTransform.Y>
+									</TranslateTransform>
+									<TranslateTransform X="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Border}}, Path=ActualWidth, Converter={converters:MultiplyConverter}, ConverterParameter=-0.5}" Y="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Border}}, Path=ActualHeight, Converter={converters:MultiplyConverter}, ConverterParameter=-0.5}" />
+								</TransformGroup>
+							</Border.RenderTransform>
+							<StackPanel Width="32">
+								<StackPanel.ToolTip>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Name}" />
+										<TextBlock Text="@" />
+										<TextBlock Text="{Binding Path=Position.Name}" />
+									</StackPanel>
+								</StackPanel.ToolTip>
+								<Image Source="{Binding Path=Image}" Stretch="Uniform" />
+							</StackPanel>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</Grid>
+        <Grid Grid.Column="3">
+            <Label Foreground="White">Menu Right</Label>
+        </Grid>
+    </Grid>
+</Window>
